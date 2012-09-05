@@ -105,33 +105,6 @@ namespace MicroSolr.Connectors
                 return QueryCore<TResult[]>(HttpHelper.MakeSearchQuery(formattedQuery, writerType), responseFormatter);
             }
         }
-
-
-        //private string[] FetchBulkIds(string query, int startIndex, int maxRows, int batchSize, string returnFieldName)
-        //{
-        //    string fieldsOnlyQuery = query + "&fl=" + returnFieldName;
-        //    JsonResponse responseObject = QueryCore<JsonResponse>(HttpHelper.MakeSearchQuery(fieldsOnlyQuery, HttpHelper.WriterType.JSON, startIndex, 0), JsonResponseFormatter);
-
-        //    if (responseObject.NumFound > maxRows)
-        //    {
-        //        IList<string> queries = HttpHelper.MakeBatchSearchQueries(fieldsOnlyQuery, startIndex, maxRows, responseObject.NumFound, HttpHelper.WriterType.CSV);
-
-        //        List<string> ids = new List<string>();
-        //        queries.AsParallel().ForAll(q =>
-        //        {
-        //            string[] batchIds = QueryCore<string[]>(q, CsvListResponseFormatter);
-        //            lock (ids)
-        //            {
-        //                ids.AddRange(batchIds);
-        //            }
-        //        });
-        //    }
-        //    else
-        //    {
-        //        return QueryCore<string[]>(HttpHelper.MakeSearchQuery(fieldsOnlyQuery, HttpHelper.WriterType.CSV), CsvListResponseFormatter);
-        //    }
-        //    return null;
-        //}
         #endregion
 
         #region Public
@@ -156,42 +129,11 @@ namespace MicroSolr.Connectors
             return ParallelResultsFetcher<TCoreDocumentType>(query, 0, maxRows, getAll, string.Empty,
                 (data) => { return JsonResponseFormatter(data).Response.docs; }
                 , HttpHelper.WriterType.JSON).ToArray();
-
-            //List<TCoreDocumentType> documents = new List<TCoreDocumentType>();
-            //JsonResponse responseObject = QueryCore<JsonResponse>(HttpHelper.MakeSearchQuery(query, HttpHelper.WriterType.JSON, startIndex, maxRows), JsonResponseFormatter);
-            //documents.AddRange(responseObject.Response.docs);
-            //if (maxRows < 0)
-            //{
-            //    maxRows = DEFAULT_MAX_ROWS;
-            //}
-            //if (responseObject.NumFound > maxRows )
-            //{
-            //    if (getAll)
-            //    {
-            //        IList<string> queries = HttpHelper.MakeBatchSearchQueries(query, startIndex, maxRows, responseObject.NumFound, HttpHelper.WriterType.JSON);
-
-            //        queries.AsParallel().ForAll(q =>
-            //        {
-            //            JsonResponse batchResponseObject = QueryCore<JsonResponse>(q, JsonResponseFormatter);
-            //            lock (documents)
-            //            {
-            //                documents.AddRange(batchResponseObject.Response.docs);
-            //            }
-            //        });
-            //    }
-            //    else
-            //    {
-            //        System.Diagnostics.Debug.WriteLine("Results are being ignored.");
-            //    }
-            //}
-
-            //return documents;
         }
 
 
         public string[] SeachIds(string query, long startIndex = DEFAULT_START_INDEX, long maxRows = DEFAULT_MAX_ROWS)
         {
-            //return FetchBulkIds(query, startIndex, maxRows, batchSize, _uniqueFieldName);
             return ParallelResultsFetcher<string>(query, startIndex, maxRows, true, string.Empty, CsvListResponseFormatter, HttpHelper.WriterType.CSV).ToArray();
         }
 
