@@ -11,10 +11,10 @@
     <description>$description$</description>
     <releaseNotes>
 		A simple fast/parallel connector for SOLR connectivity. Contains CSV and JSon connectivity.
-		- Fixed funcion names.
+		- Fixed function names.
 		- Fixed NuSpec configuration.
 	</releaseNotes>
     <copyright>Copyright 2012</copyright>
-    <tags>Solr MicroSolr</tags>
+    <tags>Solr MicroSolr MicroSolr.Connectors</tags>
   </metadata>
 </package>
