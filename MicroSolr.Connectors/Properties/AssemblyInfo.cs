@@ -8,10 +8,10 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("MicroSolr.Connectors")]
 [assembly: AssemblyDescription("A simple fast/parallel connector for SOLR connectivity")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("EF")]
+[assembly: AssemblyCompany("Imran Saeed")]
 [assembly: AssemblyProduct("MicroSolr.Connectors")]
-[assembly: AssemblyCopyright("Copyright © EF 2012")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCopyright("Copyright © Imran Saeed 2012")]
+[assembly: AssemblyTrademark("MicroSolr")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
