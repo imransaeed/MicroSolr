@@ -105,14 +105,36 @@ namespace MicroSolr.Connectors
                 return QueryCore<TResult[]>(HttpHelper.MakeSearchQuery(formattedQuery, writerType), responseFormatter);
             }
         }
+
+        private void SaveObject(object document, bool commit, bool optimize)
+        {
+            HttpHelper.HttpCommunicate(_updateUrl, JsonConvert.SerializeObject(document), post: true);
+            CommitAndOptimize(commit, optimize);
+        }
         #endregion
 
         #region Public
 
+        /// <summary>
+        /// Default start index for searches
+        /// </summary>
         public const int DEFAULT_START_INDEX = 0;
+
+        /// <summary>
+        /// Default maximum number of rows to be fetched in a result
+        /// </summary>
         public const int DEFAULT_MAX_ROWS = 100;
+
+        /// <summary>
+        /// Default batch size for bulk post operations
+        /// </summary>
         public const int DEFAULT_BATCH_SIZE = 500;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TypedConnector&lt;TCoreDocumentType&gt;"/> class.
+        /// </summary>
+        /// <param name="baseUrl">The base URL of your Solr core. For example http://localhost:8983/Solr/ </param>
+        /// <param name="uniqueFieldName">Name of field that is the primary key.</param>
         public TypedConnector(string baseUrl, string uniqueFieldName = "")
         {
             _uniqueFieldName = uniqueFieldName;
@@ -123,48 +145,83 @@ namespace MicroSolr.Connectors
 
         }
 
+        /// <summary>
+        /// Searches the core for specified query.
+        /// </summary>
+        /// <param name="query">The solr query without ?q= prefix. All other query related parameters like fq, wt are allowed.</param>
+        /// <param name="getAll">Specifies whether to return all the rows or not.</param>
+        /// <param name="startIndex">Start index of search results.</param>
+        /// <param name="maxRows">The maximum number of rows to return in a call to solr.</param>
+        /// <returns></returns>
         public IList<TCoreDocumentType> Search(string query, bool getAll = true, long startIndex = DEFAULT_START_INDEX, int maxRows = DEFAULT_MAX_ROWS)
         {
-
             return ParallelResultsFetcher<TCoreDocumentType>(query, 0, maxRows, getAll, string.Empty,
                 (data) => { return JsonResponseFormatter(data).Response.docs; }
                 , HttpHelper.WriterType.JSON).ToArray();
         }
 
 
-        public string[] SeachIds(string query, long startIndex = DEFAULT_START_INDEX, long maxRows = DEFAULT_MAX_ROWS)
+        /// <summary>
+        /// Returns a list of IDs from search results.
+        /// </summary>
+        /// <param name="query">Search query that returns documents with unique field. The return fields will be trimmed</param>
+        /// <param name="startIndex">The start index.</param>
+        /// <param name="startIndex">Start index of search results.</param>
+        /// <param name="maxRows">The maximum number of rows to return in a call to solr.</param>
+        /// <returns></returns>
+        public string[] SearchIds(string query, long startIndex = DEFAULT_START_INDEX, long maxRows = DEFAULT_MAX_ROWS)
         {
             return ParallelResultsFetcher<string>(query, startIndex, maxRows, true, string.Empty, CsvListResponseFormatter, HttpHelper.WriterType.CSV).ToArray();
         }
 
-
-        private void SaveObject(object document, bool commit, bool optimize)
-        {
-            HttpHelper.HttpCommunicate(_updateUrl, JsonConvert.SerializeObject(document), post: true);
-            CommitAndOptimize(commit, optimize);
-        }
-
+        /// <summary>
+        /// Saves the specified document to Solr core.
+        /// </summary>
+        /// <param name="document">The document.</param>
+        /// <param name="commit">Specifies whether commit should be called after save.</param>
+        /// <param name="optimize">Specifies whether optimize should be called after save.</param>
         public void Save(TCoreDocumentType document, bool commit = true, bool optimize = false)
         {
             SaveObject(document, commit, optimize);
         }
 
+        /// <summary>
+        /// Saves the specified documents to Solr core.
+        /// </summary>
+        /// <param name="documents">The documents.</param>
+        /// <param name="commit">Specifies whether commit should be called after save.</param>
+        /// <param name="optimize">Specifies whether optimize should be called after save.</param>
         public void Save(IList<TCoreDocumentType> documents, bool commit = true, bool optimize = false)
         {
             SaveObject(documents, commit, optimize);
         }
 
+        /// <summary>
+        /// Commits all pending changes to the core.
+        /// </summary>
         public void Commit()
         {
             HttpHelper.HttpCommunicate(_updateUrl + "?commit=true");
         }
 
+        /// <summary>
+        /// Starts an optimize cycle on the core.
+        /// </summary>
         public void Optimize()
         {
             HttpHelper.HttpCommunicate(_updateUrl + "?optimize=true");
         }
 
-        // Uses CSV to submit large amounts of data
+        /// <summary>
+        /// Uses CSV to post a PK and FK kind of save to Solr core. New Id's will be added and missing Id's will be deleted. Any existing Id's won't be changed.
+        /// </summary>
+        /// <param name="primaryKey">The primary key.</param>
+        /// <param name="bulkIds">The bulk ids.</param>
+        /// <param name="bulkIdFieldName">Name of the bulk id field.</param>
+        /// <param name="additionalFieldNames">The additional field names.</param>
+        /// <param name="getAdditionalFieldValues">Function delegate to return additional fields.</param>
+        /// <param name="commit">Specifies whether commit should be called after save.</param>
+        /// <param name="optimize">Specifies whether optimize should be called after save.</param>
         public void BulkUpdate(string primaryKey, string[] bulkIds, string bulkIdFieldName, string[] additionalFieldNames = null, Func<string[]> getAdditionalFieldValues = null, bool commit = true, bool optimize = false)
         {
             string[] allIds = ParallelResultsFetcher<string>(string.Format("{0}:{1}", _uniqueFieldName, primaryKey), 0, DEFAULT_MAX_ROWS, true, bulkIdFieldName, CsvListResponseFormatter, HttpHelper.WriterType.CSV).ToArray();
@@ -178,6 +235,14 @@ namespace MicroSolr.Connectors
         }
 
 
+        /// <summary>
+        /// Add/replaces documents based on PK/FK combination
+        /// </summary>
+        /// <param name="primaryKey">The primary key.</param>
+        /// <param name="bulkIds">The bulk ids.</param>
+        /// <param name="bulkIdFieldName">Name of the bulk id field.</param>
+        /// <param name="additionalFieldNames">The additional field names.</param>
+        /// <param name="getAdditionalFieldValues">Function delegate to return additional fields.</param>
         public void BulkAdd(string primaryKey, string[] bulkIds, string bulkIdFieldName, string[] additionalFieldNames, Func<string[]> getAdditionalFieldValues)
         {
             const string csvContentType = "application/csv";
@@ -212,6 +277,12 @@ namespace MicroSolr.Connectors
             }
         }
 
+        /// <summary>
+        /// Deletes documents based on simple PK/FK combination. Uses a query to delete the documents.
+        /// </summary>
+        /// <param name="primaryKey">The primary key.</param>
+        /// <param name="bulkIds">The bulk ids.</param>
+        /// <param name="bulkIdFieldName">Name of the bulk id field.</param>
         public void BulkDelete(string primaryKey, string[] bulkIds, string bulkIdFieldName)
         {
             if (bulkIds != null && bulkIds.Length > 0)
