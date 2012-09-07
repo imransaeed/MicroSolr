@@ -13,7 +13,9 @@ namespace MicroSolr.Connectors
 
     using Newtonsoft.Json;
     using System.IO;
-
+    using System.Xml.Linq;
+    using System.Xml;
+    
     /// <summary>
     /// A light weight class to query solr core
     /// </summary>
@@ -83,7 +85,7 @@ namespace MicroSolr.Connectors
                 List<TResult> results = new List<TResult>();
                 if (getAll)
                 {
-                    IList<string> queries = HttpHelper.MakeBatchSearchQueries(formattedQuery, startIndex, maxRows, responseObject.NumFound, writerType);
+                    IList<string> queries = HttpHelper.MakeBatchSearchQueries(formattedQuery + "&omitHeader=true", startIndex, maxRows, responseObject.NumFound, writerType);
                     queries.AsParallel().ForAll(q =>
                     {
                         TResult[] batchResults = QueryCore<TResult[]>(q, responseFormatter);
@@ -152,12 +154,29 @@ namespace MicroSolr.Connectors
         /// <param name="getAll">Specifies whether to return all the rows or not.</param>
         /// <param name="startIndex">Start index of search results.</param>
         /// <param name="maxRows">The maximum number of rows to return in a call to solr.</param>
-        /// <returns></returns>
+        /// <returns>A list of documents.</returns>
         public IList<TCoreDocumentType> Search(string query, bool getAll = true, long startIndex = DEFAULT_START_INDEX, int maxRows = DEFAULT_MAX_ROWS)
         {
             return ParallelResultsFetcher<TCoreDocumentType>(query, 0, maxRows, getAll, string.Empty,
                 (data) => { return JsonResponseFormatter(data).Response.docs; }
                 , HttpHelper.WriterType.JSON).ToArray();
+        }
+
+
+        /// <summary>
+        /// Searches the core for specified query.
+        /// </summary>
+        /// <param name="query">The solr query without ?q= prefix. All other query related parameters like fq, wt are allowed.</param>
+        /// <param name="getAll">Specifies whether to return all the rows or not.</param>
+        /// <param name="startIndex">Start index of search results.</param>
+        /// <param name="maxRows">The maximum number of rows to return in a call to solr.</param>
+        /// <returns>An instance of <see cref="TypedConnector&lt;TCoreDocumentType&gt;"/> from the server.</returns>
+        public IEnumerable<XmlNode> SearchX(string query, bool getAll = true, long startIndex = DEFAULT_START_INDEX, int maxRows = DEFAULT_MAX_ROWS)
+        {
+            IEnumerable<XmlNode> results = ParallelResultsFetcher<XmlNode>(query, 0, maxRows, getAll, string.Empty,
+                       (data) => { XmlDocument fragment = new XmlDocument(); fragment.InnerXml = data; return fragment.SelectNodes("//doc").Cast<XmlNode>().ToArray(); }
+                       , HttpHelper.WriterType.XML);
+            return results;
         }
 
 
