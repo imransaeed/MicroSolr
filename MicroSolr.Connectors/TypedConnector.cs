@@ -19,7 +19,7 @@ namespace MicroSolr.Connectors
     /// <summary>
     /// A light weight class to query solr core
     /// </summary>
-    public sealed class TypedConnector<TCoreDocumentType>
+    public sealed class TypedConnector<TCoreDocumentType> : MicroSolr.Connectors.ITypedConnector<TCoreDocumentType>
     {
         #region JSonresponsecontainer
         private class Response
@@ -118,21 +118,6 @@ namespace MicroSolr.Connectors
         #region Public
 
         /// <summary>
-        /// Default start index for searches
-        /// </summary>
-        public const int DEFAULT_START_INDEX = 0;
-
-        /// <summary>
-        /// Default maximum number of rows to be fetched in a result
-        /// </summary>
-        public const int DEFAULT_MAX_ROWS = 100;
-
-        /// <summary>
-        /// Default batch size for bulk post operations
-        /// </summary>
-        public const int DEFAULT_BATCH_SIZE = 500;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="TypedConnector&lt;TCoreDocumentType&gt;"/> class.
         /// </summary>
         /// <param name="baseUrl">The base URL of your Solr core. For example http://localhost:8983/Solr/ </param>
@@ -155,7 +140,7 @@ namespace MicroSolr.Connectors
         /// <param name="startIndex">Start index of search results.</param>
         /// <param name="maxRows">The maximum number of rows to return in a call to solr.</param>
         /// <returns>A list of documents.</returns>
-        public IList<TCoreDocumentType> Search(string query, bool getAll = true, long startIndex = DEFAULT_START_INDEX, int maxRows = DEFAULT_MAX_ROWS)
+        public IList<TCoreDocumentType> Search(string query, bool getAll = true, long startIndex = 0, int maxRows = 100)
         {
             return ParallelResultsFetcher<TCoreDocumentType>(query, 0, maxRows, getAll, string.Empty,
                 (data) => { return JsonResponseFormatter(data).Response.docs; }
@@ -171,7 +156,7 @@ namespace MicroSolr.Connectors
         /// <param name="startIndex">Start index of search results.</param>
         /// <param name="maxRows">The maximum number of rows to return in a call to solr.</param>
         /// <returns>An instance of <see cref="TypedConnector&lt;TCoreDocumentType&gt;"/> from the server.</returns>
-        public IEnumerable<XmlNode> SearchX(string query, bool getAll = true, long startIndex = DEFAULT_START_INDEX, int maxRows = DEFAULT_MAX_ROWS)
+        public IEnumerable<XmlNode> SearchXML(string query, bool getAll = true, long startIndex = 0, int maxRows = 100)
         {
             IEnumerable<XmlNode> results = ParallelResultsFetcher<XmlNode>(query, 0, maxRows, getAll, string.Empty,
                        (data) => { XmlDocument fragment = new XmlDocument(); fragment.InnerXml = data; return fragment.SelectNodes("//doc").Cast<XmlNode>().ToArray(); }
@@ -188,7 +173,7 @@ namespace MicroSolr.Connectors
         /// <param name="startIndex">Start index of search results.</param>
         /// <param name="maxRows">The maximum number of rows to return in a call to solr.</param>
         /// <returns></returns>
-        public string[] SearchIds(string query, long startIndex = DEFAULT_START_INDEX, long maxRows = DEFAULT_MAX_ROWS)
+        public string[] SearchIds(string query, long startIndex = 0, long maxRows = 100)
         {
             return ParallelResultsFetcher<string>(query, startIndex, maxRows, true, string.Empty, CsvListResponseFormatter, HttpHelper.WriterType.CSV).ToArray();
         }
@@ -243,7 +228,7 @@ namespace MicroSolr.Connectors
         /// <param name="optimize">Specifies whether optimize should be called after save.</param>
         public void BulkUpdate(string primaryKey, string[] bulkIds, string bulkIdFieldName, string[] additionalFieldNames = null, Func<string[]> getAdditionalFieldValues = null, bool commit = true, bool optimize = false)
         {
-            string[] allIds = ParallelResultsFetcher<string>(string.Format("{0}:{1}", _uniqueFieldName, primaryKey), 0, DEFAULT_MAX_ROWS, true, bulkIdFieldName, CsvListResponseFormatter, HttpHelper.WriterType.CSV).ToArray();
+            string[] allIds = ParallelResultsFetcher<string>(string.Format("{0}:{1}", _uniqueFieldName, primaryKey), 0, 100, true, bulkIdFieldName, CsvListResponseFormatter, HttpHelper.WriterType.CSV).ToArray();
             string[] newIds = (from b in bulkIds where !allIds.Contains(b) select b).ToArray();
             string[] deletedIds = (from a in allIds where !bulkIds.Contains(a) select a).ToArray();
 
@@ -273,17 +258,17 @@ namespace MicroSolr.Connectors
                 string csvHeader = "fieldnames=" + string.Join(",", fields.ToArray());
                 string updateUrl = _csvUpdateUrl + "?" + csvHeader;
                 string addStream = string.Join(
-                    "\n", (from b in bulkIds.Take(DEFAULT_BATCH_SIZE) select string.Join(",", primaryKey, b, string.Join(",", additionalFieldValuesFetcher()))).ToArray());
-                if (bulkIds.Length > DEFAULT_BATCH_SIZE)
+                    "\n", (from b in bulkIds.Take(500) select string.Join(",", primaryKey, b, string.Join(",", additionalFieldValuesFetcher()))).ToArray());
+                if (bulkIds.Length > 500)
                 {
                     List<string> addStreams = new List<string>();
                     addStreams.Add(addStream);
-                    for (int batch = 0, startRow = DEFAULT_BATCH_SIZE + 1; startRow < bulkIds.LongLength; startRow += DEFAULT_BATCH_SIZE, batch++)
+                    for (int batch = 0, startRow = 500 + 1; startRow < bulkIds.LongLength; startRow += 500, batch++)
                     {
                         addStreams.Add(
                             string.Join(
                                 "\n",
-                                (from b in bulkIds.Skip(batch * DEFAULT_BATCH_SIZE).Take(DEFAULT_BATCH_SIZE) select string.Format(",", primaryKey, b, additionalFieldValuesFetcher()).ToArray()))
+                                (from b in bulkIds.Skip(batch * 500).Take(500) select string.Format(",", primaryKey, b, additionalFieldValuesFetcher()).ToArray()))
                             );
 
                         addStreams.AsParallel().ForAll(a => HttpHelper.HttpCommunicate(updateUrl, a, csvContentType, post: true));
@@ -307,19 +292,19 @@ namespace MicroSolr.Connectors
             if (bulkIds != null && bulkIds.Length > 0)
             {
                 const string deleteQueryFmt = "{{\"delete\":{{ \"query\":\"{0}:{1} AND ({2})\"}}}}";
-                string[] clause = (from b in bulkIds.Skip(0).Take(Math.Min(DEFAULT_BATCH_SIZE, bulkIds.Length)) select bulkIdFieldName + ":" + b).ToArray();
+                string[] clause = (from b in bulkIds.Skip(0).Take(Math.Min(500, bulkIds.Length)) select bulkIdFieldName + ":" + b).ToArray();
                 string deleteQuery = string.Format(deleteQueryFmt, _uniqueFieldName, primaryKey, string.Join(" OR ", clause));
                 //string deleteQuery = JsonConvert.SerializeObject(new { delete = new { query = string.Format("{0}:{1} and ({2})", _uniqueFieldName, primaryKey, string.Join(" or ", clause)) } });
 
-                if (bulkIds.Length > DEFAULT_BATCH_SIZE)
+                if (bulkIds.Length > 500)
                 {
                     List<string> queries = new List<string>();
                     queries.Add(deleteQuery);
-                    for (int batch = 0, startRow = DEFAULT_BATCH_SIZE + 1; startRow < bulkIds.LongLength; startRow += DEFAULT_BATCH_SIZE, batch++)
+                    for (int batch = 0, startRow = 500 + 1; startRow < bulkIds.LongLength; startRow += 500, batch++)
                     {
                         queries.Add(
                             string.Format(deleteQueryFmt, _uniqueFieldName, primaryKey, string.Join(" OR ",
-                            (from b in bulkIds.Skip(batch * DEFAULT_BATCH_SIZE).Take(DEFAULT_BATCH_SIZE) select bulkIdFieldName + ":" + b).ToArray())));
+                            (from b in bulkIds.Skip(batch * 500).Take(500) select bulkIdFieldName + ":" + b).ToArray())));
                     }
                     queries.AsParallel().ForAll(q => HttpHelper.HttpCommunicate(_updateUrl, q, post: true));
                 }
