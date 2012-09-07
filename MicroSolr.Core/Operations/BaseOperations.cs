@@ -18,9 +18,9 @@ namespace MicroSolr.Core.Operations
     {
         protected IHttpHelper _httpHelper;
 
-        public abstract TOutput Load<TOutput>(ILoadCommand command, IResponseFormatter<TOutput> formatter);
+        public abstract IEnumerable<TOutput> Load<TOutput>(ILoadCommand command, IDataSerializer<TOutput> serializer, IResponseFormatter<TOutput> formatter);
 
-        public abstract IOperations Save<TData>(ISaveCommand<TData> command, bool commit = true, bool optimize = false);
+        public abstract IOperations Save<TData>(ISaveCommand<TData> command, IDataSerializer<TData> serializer, bool commit = true, bool optimize = false);
 
         public BaseOperations(IHttpHelper httpHelper)
         {
@@ -33,14 +33,14 @@ namespace MicroSolr.Core.Operations
         public virtual IOperations Commit()
         {
             Uri u = MakeUri(UpdateUri, "commit=true");
-            _httpHelper.HttpCommunicate(u, null, null, null, false);
+            _httpHelper.Get(u);
             return this;
         }
 
         public virtual IOperations Optimize()
         {
             Uri u = MakeUri(UpdateUri, "optimize=true");
-            _httpHelper.HttpCommunicate(u, null, null, null, false);
+            _httpHelper.Get(u);
             return this;
         }
 

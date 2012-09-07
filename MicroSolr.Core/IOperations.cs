@@ -16,9 +16,9 @@ namespace MicroSolr.Core
     /// </summary>
     public interface IOperations
     {
-        TOutput Load<TOutput>(ILoadCommand command, IResponseFormatter<TOutput> formatter);
+        IEnumerable<TOutput> Load<TOutput>(ILoadCommand command, IDataSerializer<TOutput> serializer, IResponseFormatter<TOutput> formatter);
 
-        IOperations Save<TData>(ISaveCommand<TData> command, bool commit = true, bool optimize = false);
+        IOperations Save<TData>(ISaveCommand<TData> command, IDataSerializer<TData> serializer, bool commit = true, bool optimize = false);
 
         IOperations Commit();
 

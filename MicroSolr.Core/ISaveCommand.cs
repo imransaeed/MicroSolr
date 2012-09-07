@@ -16,6 +16,6 @@ namespace MicroSolr.Core
     /// </summary>
     public interface ISaveCommand<TData> : ICommand
     {
-        TData Data { get; set; }
+        IEnumerable<TData> Data { get; set; }
     }
 }

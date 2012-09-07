@@ -42,7 +42,9 @@
   <ItemGroup>
     <Compile Include="Commands\LoadCommand.cs" />
     <Compile Include="Commands\SaveCommand.cs" />
+    <Compile Include="Formatters\StringResponseFormatter.cs" />
     <Compile Include="FormatType.cs" />
+    <Compile Include="IDataSerializer.cs" />
     <Compile Include="IHttpHelper.cs" />
     <Compile Include="ICommand.cs" />
     <Compile Include="ICore.cs" />
@@ -60,9 +62,7 @@
     <Compile Include="ShardingStrategies\SingleCoreShardingStrategy.cs" />
     <Compile Include="Cores\SingleCore.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Formatters\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

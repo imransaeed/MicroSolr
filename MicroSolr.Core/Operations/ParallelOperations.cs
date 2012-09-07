@@ -21,15 +21,17 @@ namespace MicroSolr.Core.Operations
         {
 
         }
-        public override TOutput Load<TOutput>(ILoadCommand command, IResponseFormatter<TOutput> formatter)
+
+
+
+        public override IEnumerable<TOutput> Load<TOutput>(ILoadCommand command, IDataSerializer<TOutput> serializer, IResponseFormatter<TOutput> formatter)
         {
             throw new NotImplementedException();
         }
 
-        public override IOperations Save<TData>(ISaveCommand<TData> command, bool commit = true, bool optimize = false)
+        public override IOperations Save<TData>(ISaveCommand<TData> command, IDataSerializer<TData> serializer, bool commit = true, bool optimize = false)
         {
             throw new NotImplementedException();
         }
-
     }
 }
