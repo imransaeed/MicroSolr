@@ -22,17 +22,17 @@ namespace MicroSolr.Core.Operations
 
         }
 
-        public override TOutput Load<TOutput>(ILoadCommand command, IResponseFormatter<TOutput> formatter)
+        public override IEnumerable<TOutput> Load<TOutput>(ILoadCommand command, IDataSerializer<TOutput> serializer, IResponseFormatter<TOutput> formatter)
         {
-            string lsq = MakeLoadQueryString(command);
-            Uri loadUri = MakeUri(SelectUri, lsq);
-            string response = _httpHelper.HttpCommunicate(loadUri, null, null, null, false);
-            return formatter.Format(response);
+            string loadQS = MakeLoadQueryString(command);
+            Uri loadUri = MakeUri(SelectUri, loadQS);
+            string response = _httpHelper.Get(loadUri);
+            return serializer.DeSerialize(response, command.ResponseFormat);
         }
 
-        public override IOperations Save<TData>(ISaveCommand<TData> command, bool commit = true, bool optimize = false)
+        public override IOperations Save<TData>(ISaveCommand<TData> command, IDataSerializer<TData> serializer, bool commit = true, bool optimize = false)
         {
-            TData data = command.Data;
+            _httpHelper.Post(UpdateUri, serializer.Serialize(command.Data, FormatType.JSON), "application/json", Encoding.UTF8);
             if (commit) Commit();
             if (optimize) Optimize();
             return this;
