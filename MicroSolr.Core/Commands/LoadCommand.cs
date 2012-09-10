@@ -57,5 +57,10 @@ namespace MicroSolr.Core.Commands
             get;
             set;
         }
+
+        public object Clone()
+        {
+            return new LoadCommand { FieldFilter = this.FieldFilter, Query = this.Query, FilterQuery = this.FilterQuery, GetAll = this.GetAll, MaxRows = this.MaxRows, ResponseFormat = this.ResponseFormat, StartIndex = this.StartIndex };
+        }
     }
 }

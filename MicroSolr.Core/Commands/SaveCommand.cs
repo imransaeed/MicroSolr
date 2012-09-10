@@ -22,9 +22,6 @@ namespace MicroSolr.Core.Commands
             set;
         }
 
-     
-
-
         public IShardingStrategy<TData> ShardingStrategy
         {
             get { throw new NotImplementedException(); }

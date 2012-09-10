@@ -11,7 +11,7 @@ namespace MicroSolr.Core
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
-    public interface ILoadCommand : ICommand
+    public interface ILoadCommand : ICommand, ICloneable
     {
         FormatType ResponseFormat { get; set; }
 
