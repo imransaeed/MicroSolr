@@ -66,8 +66,20 @@ namespace MicroSolr.Core.Operations
 
         public override IOperations Save<TData>(ISaveCommand<TData> command, IDataSerializer<TData> serializer, bool commit = true, bool optimize = false)
         {
-            if (command.Data.LongCount() > _writeSplitSize)
+            long dataLength = command.Data.LongCount();
+            if (dataLength > _writeSplitSize)
             {
+                IList<long> batchNumbers = new List<long>();
+                for (long startRow = 0, batchNumber = 0; startRow < dataLength; startRow += _writeSplitSize, batchNumber++)
+                {
+                    batchNumbers.Add(batchNumber);
+                }
+
+                batchNumbers.AsParallel().ForAll(b =>
+                {
+                    var data = from c in command.Data.Skip((int)(b * _writeSplitSize)).Take((int)_writeSplitSize) select c;
+                    base.ExecuteSave(data, serializer, commit, optimize);
+                });
                 return this;
             }
             else

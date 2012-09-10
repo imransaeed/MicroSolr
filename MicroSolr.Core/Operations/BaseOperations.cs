@@ -91,6 +91,14 @@ namespace MicroSolr.Core.Operations
             return serializer.DeSerialize(formattedResponse, responseFormat);
         }
 
+        protected IOperations ExecuteSave<TData>(IEnumerable<TData> data, IDataSerializer<TData> serializer, bool commit, bool optimize)
+        {
+            _httpHelper.Post(UpdateUri, serializer.Serialize(data, FormatType.JSON), "application/json", Encoding.UTF8);
+            if (commit) Commit();
+            if (optimize) Optimize();
+            return this;
+        }
+
         protected static Uri MakeUri(Uri baseUri, string queryString)
         {
             UriBuilder builder = new UriBuilder(baseUri);
