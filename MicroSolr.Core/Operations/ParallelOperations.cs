@@ -14,24 +14,67 @@ namespace MicroSolr.Core.Operations
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
-    public class ParallelOperations : BaseOperations
+    public class ParallelOperations : SimpleOperations
     {
-        public ParallelOperations(IHttpHelper httpHelper)
+        private readonly long _readSplitSize;
+        private readonly long _writeSplitSize;
+
+        public ParallelOperations(IHttpHelper httpHelper, long readSplitSize, long writeSplitSize)
             : base(httpHelper)
         {
-
+            _readSplitSize = readSplitSize;
+            _writeSplitSize = writeSplitSize;
         }
 
-
-
-        public override IEnumerable<TOutput> Load<TOutput>(ILoadCommand command, IDataSerializer<TOutput> serializer, IResponseFormatter<TOutput> formatter)
+        public override IEnumerable<TOutput> Load<TOutput>(ILoadCommand command, IDataSerializer<TOutput> serializer, IResponseFormatter<string> formatter)
         {
-            throw new NotImplementedException();
+            long maxRows = GetRowCountForResults(command);
+
+            if (maxRows > _readSplitSize)
+            {
+                List<TOutput> results = new List<TOutput>();
+                List<string> commands = new List<string>();
+
+                for (long startIndex = command.StartIndex, batchNum = 0; startIndex < maxRows; startIndex += (batchNum * _readSplitSize), batchNum++)
+                {
+                    ILoadCommand copyCommand = command.Clone() as ILoadCommand;
+                    copyCommand.GetAll = false;
+                    copyCommand.StartIndex = startIndex;
+                    copyCommand.MaxRows = _readSplitSize;
+
+                    string batchCommand = MakeLoadQueryString(copyCommand);
+
+                    commands.Add(batchCommand);
+                }
+                commands.AsParallel().ForAll(s =>
+                {
+                    var batchResults = ExecuteLoad(s, command.ResponseFormat, serializer, formatter);
+                    lock (results)
+                    {
+                        results.AddRange(batchResults);
+                    }
+                });
+
+                return results;
+            }
+            else
+            {
+                //Downgrade to simple operations
+                return base.Load(command, serializer, formatter);
+            }
         }
 
         public override IOperations Save<TData>(ISaveCommand<TData> command, IDataSerializer<TData> serializer, bool commit = true, bool optimize = false)
         {
-            throw new NotImplementedException();
+            if (command.Data.LongCount() > _writeSplitSize)
+            {
+                return this;
+            }
+            else
+            {
+                //Downgrade to simple operations
+                return base.Save(command, serializer, commit, optimize);
+            }
         }
     }
 }

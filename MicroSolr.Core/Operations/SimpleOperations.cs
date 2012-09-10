@@ -22,12 +22,21 @@ namespace MicroSolr.Core.Operations
 
         }
 
-        public override IEnumerable<TOutput> Load<TOutput>(ILoadCommand command, IDataSerializer<TOutput> serializer, IResponseFormatter<TOutput> formatter)
+        public override IEnumerable<TOutput> Load<TOutput>(ILoadCommand command, IDataSerializer<TOutput> serializer, IResponseFormatter<string> formatter)
         {
+            if (command.GetAll)
+            {
+                command.MaxRows = GetRowCountForResults(command);
+            }
+
+            if (command.MaxRows > 100000)
+            {
+                System.Diagnostics.Debug.WriteLine("Too many rows. Try using concurrent library.");
+            }
+
             string loadQS = MakeLoadQueryString(command);
-            Uri loadUri = MakeUri(SelectUri, loadQS);
-            string response = _httpHelper.Get(loadUri);
-            return serializer.DeSerialize(response, command.ResponseFormat);
+
+            return ExecuteLoad(loadQS, command.ResponseFormat, serializer, formatter);
         }
 
         public override IOperations Save<TData>(ISaveCommand<TData> command, IDataSerializer<TData> serializer, bool commit = true, bool optimize = false)
