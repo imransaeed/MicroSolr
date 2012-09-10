@@ -270,9 +270,8 @@ namespace MicroSolr.Connectors
                                 "\n",
                                 (from b in bulkIds.Skip(batch * 500).Take(500) select string.Format(",", primaryKey, b, additionalFieldValuesFetcher()).ToArray()))
                             );
-
-                        addStreams.AsParallel().ForAll(a => HttpHelper.HttpCommunicate(updateUrl, a, csvContentType, post: true));
                     }
+                    addStreams.AsParallel().ForAll(a => HttpHelper.HttpCommunicate(updateUrl, a, csvContentType, post: true));
                 }
                 else
                 {

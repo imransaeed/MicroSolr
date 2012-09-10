@@ -41,10 +41,7 @@ namespace MicroSolr.Core.Operations
 
         public override IOperations Save<TData>(ISaveCommand<TData> command, IDataSerializer<TData> serializer, bool commit = true, bool optimize = false)
         {
-            _httpHelper.Post(UpdateUri, serializer.Serialize(command.Data, FormatType.JSON), "application/json", Encoding.UTF8);
-            if (commit) Commit();
-            if (optimize) Optimize();
-            return this;
+            return ExecuteSave(command.Data, serializer, commit, optimize);
         }
     }
 }
