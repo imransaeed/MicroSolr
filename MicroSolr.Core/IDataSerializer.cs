@@ -12,13 +12,12 @@ namespace MicroSolr.Core
     using System.Text;
 
     /// <summary>
-    /// TODO: Update summary.
+    /// Serializer for generating Solr compatible streams.
     /// </summary>
     public interface IDataSerializer<TData>
     {
         string Serialize(TData data, FormatType format);
         string Serialize(IEnumerable<TData> data, FormatType format);
         IEnumerable<TData> DeSerialize(string stream, FormatType format);
-        //IEnumerable<TData> DeSerializeSingleOrDefault(string stream, FormatType format);
     }
 }
