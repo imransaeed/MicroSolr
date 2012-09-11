@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="HttpHelpers.cs" company="EF">
+// <copyright file="HttpHelpers.cs" company="Imran Saeed">
 // TODO: Update copyright text.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -18,6 +18,6 @@ namespace MicroSolr.Core
     {
         //string HttpCommunicate(Uri uri, string content, string contentType, Encoding bytesConverter, bool post);
         string Get(Uri uri);
-        void Post(Uri uri, string content, string contentType, Encoding bytesConverter);
+        string Post(Uri uri, string content, string contentType, Encoding bytesConverter);
     }
 }

@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="HttpHelper.cs" company="EF">
+// <copyright file="HttpHelper.cs" company="Imran Saeed">
 // TODO: Update copyright text.
 // </copyright>
 // -----------------------------------------------------------------------

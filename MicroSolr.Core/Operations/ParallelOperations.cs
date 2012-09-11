@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="ParallelOperations.cs" company="EF">
+// <copyright file="ParallelOperations.cs" company="Imran Saeed">
 // TODO: Update copyright text.
 // </copyright>
 // -----------------------------------------------------------------------

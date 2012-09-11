@@ -11,3 +11,4 @@ packages
 *.suo
 *.user
 *.vsmdi
+*.cache
