@@ -46,12 +46,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HttpHelper.cs" />
+    <Compile Include="ISimpleConnector.cs" />
     <Compile Include="ITypedConnector.cs" />
+    <Compile Include="SimpleConnector.cs" />
     <Compile Include="TypedConnector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MicroSolr.Core\MicroSolr.Core.csproj">
+      <Project>{623471D6-0933-43AC-B89B-CB1FD5F47FCD}</Project>
+      <Name>MicroSolr.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

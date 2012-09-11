@@ -10,6 +10,7 @@ namespace MicroSolr.Core.Cores
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using MicroSolr.Core.Commands;
 
     /// <summary>
     /// TODO: Update summary.
@@ -39,6 +40,17 @@ namespace MicroSolr.Core.Cores
         {
             get;
             private set;
+        }
+
+
+        public ILoadCommand CreateLoadCommand()
+        {
+            return new LoadCommand();
+        }
+
+        public ISaveCommand<TData> CreateSaveCommand<TData>()
+        {
+            return new SaveCommand<TData>() ;
         }
     }
 }
