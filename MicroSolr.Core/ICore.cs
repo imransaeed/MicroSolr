@@ -16,6 +16,10 @@ namespace MicroSolr.Core
 
         IOperations Operations { get; }
 
+        ILoadCommand CreateLoadCommand();
+
+        ISaveCommand<TData> CreateSaveCommand<TData>();
+
         IClient Server { get; }
     }
 }
