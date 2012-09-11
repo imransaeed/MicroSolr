@@ -16,7 +16,7 @@ namespace MicroSolr.Core.Cores
     /// </summary>
     public class SingleCore : ICore
     {
-        public SingleCore(string name, IServer server, IOperations operations)
+        public SingleCore(string name, IClient server, IOperations operations)
         {
             Name = name;
             Server = server;
@@ -35,7 +35,7 @@ namespace MicroSolr.Core.Cores
             private set;
         }
 
-        public IServer Server
+        public IClient Server
         {
             get;
             private set;
