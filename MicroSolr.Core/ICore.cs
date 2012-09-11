@@ -16,6 +16,6 @@ namespace MicroSolr.Core
 
         IOperations Operations { get; }
 
-        IServer Server { get; }
+        IClient Server { get; }
     }
 }

@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Clients\HttpClient.cs" />
     <Compile Include="Commands\LoadCommand.cs" />
     <Compile Include="Commands\SaveCommand.cs" />
     <Compile Include="Formatters\StringResponseFormatter.cs" />
@@ -52,7 +53,7 @@
     <Compile Include="IOperations.cs" />
     <Compile Include="IResponseFormatter.cs" />
     <Compile Include="ISaveCommand.cs" />
-    <Compile Include="IServer.cs" />
+    <Compile Include="IClient.cs" />
     <Compile Include="IShardingStrategy.cs" />
     <Compile Include="IUriBuilder.cs" />
     <Compile Include="Operations\BaseOperations.cs" />

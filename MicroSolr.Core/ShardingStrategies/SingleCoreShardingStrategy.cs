@@ -16,8 +16,8 @@ namespace MicroSolr.Core.ShardingStrategies
     /// </summary>
     public class SingleCoreShardingStrategy<TData> : IShardingStrategy<TData>
     {
-        private readonly IServer _server;
-        public SingleCoreShardingStrategy(IServer server)
+        private readonly IClient _server;
+        public SingleCoreShardingStrategy(IClient server)
         {
             _server = server;
         }
