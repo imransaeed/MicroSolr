@@ -20,6 +20,6 @@ namespace MicroSolr.Core
 
         ISaveCommand<TData> CreateSaveCommand<TData>();
 
-        IClient Server { get; }
+        IClient Client { get; }
     }
 }

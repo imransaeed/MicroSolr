@@ -155,7 +155,7 @@ namespace MicroSolr.Connectors
         /// <param name="getAll">Specifies whether to return all the rows or not.</param>
         /// <param name="startIndex">Start index of search results.</param>
         /// <param name="maxRows">The maximum number of rows to return in a call to solr.</param>
-        /// <returns>An instance of <see cref="TypedConnector&lt;TCoreDocumentType&gt;"/> from the server.</returns>
+        /// <returns>An instance of <see cref="TypedConnector&lt;TCoreDocumentType&gt;"/> from the client.</returns>
         public IEnumerable<XmlNode> SearchXML(string query, bool getAll = true, long startIndex = 0, int maxRows = 100)
         {
             IEnumerable<XmlNode> results = ParallelResultsFetcher<XmlNode>(query, 0, maxRows, getAll, string.Empty,
