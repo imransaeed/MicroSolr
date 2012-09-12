@@ -5,13 +5,13 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("MicroSolr.Connectors")]
-[assembly: AssemblyDescription("A simple fast/parallel connector for SOLR connectivity")]
+[assembly: AssemblyTitle("MicroSolr.Tests")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Imran Saeed")]
-[assembly: AssemblyProduct("MicroSolr.Connectors")]
-[assembly: AssemblyCopyright("Copyright © Imran Saeed 2012")]
-[assembly: AssemblyTrademark("MicroSolr")]
+[assembly: AssemblyCompany("EF")]
+[assembly: AssemblyProduct("MicroSolr.Tests")]
+[assembly: AssemblyCopyright("Copyright © EF 2012")]
+[assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("77a59d85-5f2a-4e0c-a30d-df46839222fe")]
+[assembly: Guid("0ad4ac37-8b12-437b-9edc-d858051e8b1e")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -31,6 +31,5 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
-// [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("2.0.0.0")]
-[assembly: AssemblyFileVersion("2.0.0.0")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]

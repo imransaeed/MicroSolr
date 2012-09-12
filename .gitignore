@@ -4,6 +4,11 @@ obj
 
 # mstest test results
 TestResults
-.ncrunchsolution
-.user
-.suo
+packages
+*.ncrunchsolution
+*.ncrunchsolution.user
+*.testsettings
+*.suo
+*.user
+*.vsmdi
+*.cache

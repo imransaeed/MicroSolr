@@ -6,18 +6,15 @@
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
-    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0.html</licenseUrl>	
-    <projectUrl>https://github.com/imransaeed/MicroSolr/</projectUrl>
+    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0.html</licenseUrl>
+    <projectUrl>https://github.com/imransaeed/MicroSolr</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
-		A simple fast/parallel connector for SOLR connectivity. 
-			 - Simpler interface
+		Version 1.0.0.0 
+		Contains the initial interface design and Json.Net implemetation.
 	</releaseNotes>
     <copyright>Copyright 2012</copyright>
-    <tags>Solr MicroSolr MicroSolr.Connectors</tags>
-	<dependencies>
-      <dependency id="MicroSolr.Core" version="1.0.0.0" />
-    </dependencies>
+    <tags>Solr MicroSolr MicroSolr.Core</tags>
   </metadata>
 </package>
