@@ -11,6 +11,7 @@ namespace MicroSolr.Core.Operations
     using System.Linq;
     using System.Text;
     using System.Xml.Linq;
+    using MicroSolr.Core.Web;
 
     /// <summary>
     /// TODO: Update summary.
@@ -23,10 +24,11 @@ namespace MicroSolr.Core.Operations
 
         public abstract IOperations Save<TData>(ISaveCommand<TData> command, IDataSerializer<TData> serializer, bool commit = true, bool optimize = false);
 
-        public BaseOperations(IHttpHelper httpHelper)
+        public BaseOperations(ICore core, IHttpHelper httpHelper)
         {
-            _httpHelper = httpHelper;
-            CoreUri = new Uri(string.Format("{0}/{1}/", Core.Server.BaseUri.ToString(), Core.Name));
+            _httpHelper = httpHelper ?? new StatelessHttpHelper();
+            Core = core;
+            CoreUri = new Uri(string.Format("{0}/{1}/", Core.Client.BaseUri.ToString().TrimEnd('/'), Core.Name));
             SelectUri = new Uri(CoreUri.ToString() + "select/");
             UpdateUri = new Uri(CoreUri.ToString() + "update/");
         }

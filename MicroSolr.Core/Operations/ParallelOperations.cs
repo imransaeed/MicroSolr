@@ -19,8 +19,8 @@ namespace MicroSolr.Core.Operations
         private readonly long _readSplitSize;
         private readonly long _writeSplitSize;
 
-        public ParallelOperations(IHttpHelper httpHelper, long readSplitSize, long writeSplitSize)
-            : base(httpHelper)
+        public ParallelOperations(ICore core, IHttpHelper httpHelper = null, long readSplitSize = 1000, long writeSplitSize = 1000)
+            : base(core, httpHelper)
         {
             _readSplitSize = readSplitSize;
             _writeSplitSize = writeSplitSize;

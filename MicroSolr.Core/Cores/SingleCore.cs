@@ -11,17 +11,18 @@ namespace MicroSolr.Core.Cores
     using System.Linq;
     using System.Text;
     using MicroSolr.Core.Commands;
+    using MicroSolr.Core.Operations;
 
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
     public class SingleCore : ICore
     {
-        public SingleCore(string name, IClient server, IOperations operations)
+        public SingleCore(string name, IClient client, IOperations operations = null)
         {
             Name = name;
-            Server = server;
-            Operations = operations;
+            Client = client;
+            Operations = operations ?? new SimpleOperations(this);
         }
 
         public string Name
@@ -36,7 +37,7 @@ namespace MicroSolr.Core.Cores
             private set;
         }
 
-        public IClient Server
+        public IClient Client
         {
             get;
             private set;

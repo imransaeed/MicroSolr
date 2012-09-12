@@ -10,7 +10,10 @@ namespace MicroSolr.Connectors
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-using MicroSolr.Core;
+    using MicroSolr.Core;
+    using MicroSolr.Core.Serializers;
+    using MicroSolr.Core.Clients;
+    using MicroSolr.Core.Cores;
 
     /// <summary>
     /// Simple Solr connection class that uses JSON Serialization to load and save data
@@ -20,10 +23,17 @@ using MicroSolr.Core;
         private IClient _client;
         private IDataSerializer<TData> _serializer;
 
-        public SimpleConnector(IClient client, IDataSerializer<TData> serializer)
+        public static SimpleConnector<TData> Create(string serverUrl, string coreName)
+        {
+            var client = new HttpClient(new Uri(serverUrl));
+            client.AddCores(new SingleCore(coreName, client));
+            return new SimpleConnector<TData>(client);
+        }
+
+        public SimpleConnector(IClient client, IDataSerializer<TData> serializer = null)
         {
             _client = client;
-            _serializer = serializer;
+            _serializer = serializer ?? new MultiFormatSerializer<TData>();
         }
 
         public void Save(params TData[] items)

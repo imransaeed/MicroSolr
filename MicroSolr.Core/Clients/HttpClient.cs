@@ -16,10 +16,18 @@ namespace MicroSolr.Core.Clients
     /// </summary>
     public class HttpClient : IClient
     {
-        public HttpClient(Uri baseUri, params ICore[] cores)
+        public HttpClient(Uri baseUri)
         {
             BaseUri = baseUri;
-            Cores = new List<ICore>(cores);
+            Cores = new List<ICore>();
+
+        }
+
+        public void AddCores(params ICore[] cores)
+        {
+            foreach (var core in cores)
+                Cores.Add(core);
+
             DefaultCore = Cores.First();
         }
 

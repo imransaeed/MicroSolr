@@ -16,8 +16,8 @@ namespace MicroSolr.Core.Operations
     /// </summary>
     public class SimpleOperations : BaseOperations
     {
-        public SimpleOperations(IHttpHelper httpHelper)
-            : base(httpHelper)
+        public SimpleOperations(ICore core, IHttpHelper httpHelper = null)
+            : base(core, httpHelper)
         {
 
         }
