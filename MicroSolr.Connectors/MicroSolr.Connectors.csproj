@@ -37,6 +37,10 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseConnector.cs" />
+    <Compile Include="DynamicConnector.cs" />
+    <Compile Include="IConnector.cs" />
+    <Compile Include="IDynamicConnector.cs" />
     <Compile Include="ISimpleConnector.cs" />
     <Compile Include="SimpleConnector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
