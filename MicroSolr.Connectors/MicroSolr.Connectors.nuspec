@@ -17,7 +17,7 @@
     <copyright>Copyright 2012</copyright>
     <tags>Solr MicroSolr MicroSolr.Connectors</tags>
 	<dependencies>
-      <dependency id="MicroSolr.Core" version="1.0.0.0" />
+      <dependency id="MicroSolr.Core" version="1.1.0.0" />
     </dependencies>
   </metadata>
 </package>
