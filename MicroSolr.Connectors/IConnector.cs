@@ -18,13 +18,10 @@
 
 namespace MicroSolr.Connectors
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
 
     /// <summary>
-    /// TODO: Update summary.
+    /// Basic connector
     /// </summary>
     public interface IConnector<TData>
     {

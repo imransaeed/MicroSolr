@@ -19,11 +19,10 @@
 namespace MicroSolr.Core
 {
     using System;
-    using System.Net;
     using System.Collections.Generic;
 
     /// <summary>
-    /// TODO: Update summary.
+    /// Basic client for connecting to a Solr instance's cores
     /// </summary>
     public interface IClient
     {

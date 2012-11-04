@@ -19,13 +19,25 @@
 namespace MicroSolr.Core
 {
     /// <summary>
-    /// TODO: Update summary.
+    /// Solr writer types
     /// </summary>
     public enum FormatType
     {
-        XML = 0,
-        JSON = 1,
-        CSV = 2,
+        /// <summary>
+        /// Default Xml type
+        /// </summary>
+        Xml = 0,
+        /// <summary>
+        /// Json type
+        /// </summary>
+        Json = 1,
+        /// <summary>
+        /// CSV type
+        /// </summary>
+        Csv = 2,
+        /// <summary>
+        /// Custome type.
+        /// </summary>
         Custom = 100
     }
 }

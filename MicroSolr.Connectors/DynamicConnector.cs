@@ -18,14 +18,11 @@
 
 namespace MicroSolr.Connectors
 {
+    using Core;
+    using Core.Clients;
+    using Core.Cores;
+    using Core.Operations;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using MicroSolr.Core.Clients;
-    using MicroSolr.Core;
-    using MicroSolr.Core.Cores;
-    using MicroSolr.Core.Operations;
 
     /// <summary>
     /// A dynamic connector class that will use parallel operations for queries
@@ -41,7 +38,7 @@ namespace MicroSolr.Connectors
         public DynamicConnector(IClient client, IDataSerializer<TData> serializer, params string[] coreNames)
             : base(client, serializer)
         {
-            base.AssembleConnector(coreNames);
+            AssembleConnector(coreNames);
         }
 
         protected override ICore CreateCore(string coreName, IClient client)

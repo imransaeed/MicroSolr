@@ -18,22 +18,27 @@
 
 namespace MicroSolr.Connectors
 {
-    using System;
+    using Core;
+    using Core.Serializers;
+    using Core.Web;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using MicroSolr.Core;
-    using MicroSolr.Core.Cores;
-    using MicroSolr.Core.Serializers;
-    using MicroSolr.Core.Web;
 
     /// <summary>
     /// Base connector implementation
     /// </summary>
     public abstract class BaseConnector<TData> : IConnector<TData>
     {
-        private IClient _client;
-        private IDataSerializer<TData> _serializer;
+        #region private
+
+        private readonly IClient _client;
+        private readonly IDataSerializer<TData> _serializer;
+
+        #endregion
+
+        #region protected
+        protected virtual IHttpHelper HttpHelper { get; private set; }
+
+        protected abstract ICore CreateCore(string coreName, IClient client);
 
         protected BaseConnector(IClient client, IDataSerializer<TData> serializer)
         {
@@ -49,6 +54,7 @@ namespace MicroSolr.Connectors
                 _client.Cores.Add(CreateCore(coreName, _client));
             }
         }
+        #endregion
 
         /// <summary>
         /// Saves all the objects in the solr core. Commit will be  called automatically after all the objects are saved.
@@ -73,16 +79,12 @@ namespace MicroSolr.Connectors
         {
             ILoadCommand cmd = _client.DefaultCore.CreateLoadCommand();
             cmd.Query = query;
-            cmd.ResponseFormat = FormatType.JSON;
+            cmd.ResponseFormat = FormatType.Json;
             cmd.StartIndex = startIndex;
             cmd.MaxRows = maxRows;
             cmd.GetAll = getAll;
 
             return _client.DefaultCore.Operations.Load<TData>(cmd, _serializer, null);
         }
-
-        protected virtual IHttpHelper HttpHelper { get; private set; }
-
-        protected abstract ICore CreateCore(string coreName, IClient client);
     }
 }

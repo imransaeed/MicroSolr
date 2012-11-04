@@ -100,7 +100,7 @@ namespace MicroSolr.Core.Operations
 
         protected IOperations ExecuteSave<TData>(IEnumerable<TData> data, IDataSerializer<TData> serializer, bool commit, bool optimize)
         {
-            _httpHelper.Post(UpdateUri, serializer.Serialize(data, FormatType.JSON), "application/json", Encoding.UTF8);
+            _httpHelper.Post(UpdateUri, serializer.Serialize(data, FormatType.Json), "application/json", Encoding.UTF8);
             if (commit) Commit();
             if (optimize) Optimize();
             return this;
@@ -133,7 +133,7 @@ namespace MicroSolr.Core.Operations
                 qsParts.Add("q", command.Query);
             }
             qsParts.Add("rows", "0");
-            qsParts.Add("wt", "XML");
+            qsParts.Add("wt", "Xml");
 
             return QueryStringFromDicionary(qsParts);
         }

@@ -51,11 +51,11 @@ namespace MicroSolr.Core.Serializers
         {
             switch (format)
             {
-                case FormatType.XML:
+                case FormatType.Xml:
                     throw new NotImplementedException("Feature not available yet");
-                case FormatType.JSON:
+                case FormatType.Json:
                     return JsonConvert.SerializeObject(data);
-                case FormatType.CSV:
+                case FormatType.Csv:
                     throw new NotImplementedException("Feature not available yet");
                 case FormatType.Custom:
                 default:
@@ -67,11 +67,11 @@ namespace MicroSolr.Core.Serializers
         {
             switch (format)
             {
-                case FormatType.XML:
+                case FormatType.Xml:
                     throw new NotImplementedException("Feature not available yet");
-                case FormatType.JSON:
+                case FormatType.Json:
                     return JsonConvert.SerializeObject(data);
-                case FormatType.CSV:
+                case FormatType.Csv:
                     throw new NotImplementedException("Feature not available yet");
                 case FormatType.Custom:
                 default:
@@ -83,12 +83,12 @@ namespace MicroSolr.Core.Serializers
         {
             switch (format)
             {
-                case FormatType.XML:
+                case FormatType.Xml:
                     throw new NotImplementedException("Feature not available yet");
-                case FormatType.JSON:
+                case FormatType.Json:
                     JsonResponse response = JsonConvert.DeserializeObject<JsonResponse>(stream);
                     return response.Response.Docs;
-                case FormatType.CSV:
+                case FormatType.Csv:
                     throw new NotImplementedException("Feature not available yet");
                 case FormatType.Custom:
                 default:
