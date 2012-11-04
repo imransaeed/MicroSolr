@@ -12,3 +12,4 @@ packages
 *.user
 *.vsmdi
 *.cache
+_ReSharper.MicroSolr
