@@ -36,11 +36,10 @@ namespace MicroSolr.Core.Operations
 
         public abstract IOperations Save<TData>(ISaveCommand<TData> command, IDataSerializer<TData> serializer, bool commit = true, bool optimize = false);
 
-        public BaseOperations(ICore core, IHttpHelper httpHelper)
+        public BaseOperations(Uri baseUri, string coreName, IHttpHelper httpHelper)
         {
             _httpHelper = httpHelper ?? new StatelessHttpHelper();
-            Core = core;
-            CoreUri = new Uri(string.Format("{0}/{1}/", Core.Client.BaseUri.ToString().TrimEnd('/'), Core.Name));
+            CoreUri = new Uri(string.Format("{0}/{1}/", baseUri.ToString().TrimEnd('/'), coreName));
             SelectUri = new Uri(CoreUri.ToString() + "select/");
             UpdateUri = new Uri(CoreUri.ToString() + "update/");
         }
@@ -57,12 +56,6 @@ namespace MicroSolr.Core.Operations
             Uri u = MakeUri(UpdateUri, "optimize=true");
             _httpHelper.Get(u);
             return this;
-        }
-
-        public virtual ICore Core
-        {
-            get;
-            private set;
         }
 
         protected Uri CoreUri

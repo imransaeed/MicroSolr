@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="HttpClient.cs" company="Imran Saeed">
+// <copyright file="IDynamicConnector.cs" company="Imran Saeed">
 // Copyright (c) 2012 Imran Saeed
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,7 +16,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace MicroSolr.Core.Clients
+namespace MicroSolr.Connectors
 {
     using System;
     using System.Collections.Generic;
@@ -24,33 +24,9 @@ namespace MicroSolr.Core.Clients
     using System.Text;
 
     /// <summary>
-    /// TODO: Update summary.
+    /// Dynamic connecto that has the ability to do parallel operations
     /// </summary>
-    public class HttpClient : IClient
+    public interface IDynamicConnector<TData> : ISimpleConnector<TData>
     {
-        private ICore _defaultCore;
-        public HttpClient(Uri baseUri)
-        {
-            BaseUri = baseUri;
-            Cores = new List<ICore>();
-            _defaultCore = null;
-        }
-
-        public Uri BaseUri
-        {
-            get;
-            private set;
-        }
-
-        public IList<ICore> Cores
-        {
-            get;
-            private set;
-        }
-
-        public ICore DefaultCore
-        {
-            get { return _defaultCore ?? Cores.First(); }
-        }
     }
 }

@@ -26,58 +26,35 @@ namespace MicroSolr.Connectors
     using MicroSolr.Core.Serializers;
     using MicroSolr.Core.Clients;
     using MicroSolr.Core.Cores;
+    using MicroSolr.Core.Operations;
 
     /// <summary>
     /// Simple Solr connection class that uses JSON Serialization to load and save data
     /// </summary>
     /// <typeparam name="TData">The type of the data.</typeparam>
-    public class SimpleConnector<TData> : ISimpleConnector<TData>
+    public class SimpleConnector<TData> : BaseConnector<TData>, ISimpleConnector<TData>
     {
-        private IClient _client;
-        private IDataSerializer<TData> _serializer;
-
-        public static SimpleConnector<TData> Create(string serverUrl, string coreName)
+        /// <summary>
+        /// Creates a simple connector instance from the url and core name
+        /// </summary>
+        /// <param name="serverUrl">Base url of the server without core name</param>
+        /// <param name="coreName">Core name</param>
+        /// <returns></returns>
+        public static ISimpleConnector<TData> Create(string serverUrl, string coreName)
         {
             var client = new HttpClient(new Uri(serverUrl));
-            client.AddCores(new SingleCore(coreName, client));
-            return new SimpleConnector<TData>(client);
+            return new SimpleConnector<TData>(client, coreName);
         }
 
-        public SimpleConnector(IClient client, IDataSerializer<TData> serializer = null)
+        public SimpleConnector(IClient client, string coreName, IDataSerializer<TData> serializer = null)
+            :base(client, serializer)
         {
-            _client = client;
-            _serializer = serializer ?? new MultiFormatSerializer<TData>();
+            AssembleConnector(coreName);
         }
 
-        /// <summary>
-        /// Saves all the objects in the solr core. Commit will be  called automatically after all the objects are saved.
-        /// </summary>
-        /// <param name="items">List of items</param>
-        public void Save(params TData[] items)
+        protected override ICore CreateCore(string coreName, IClient client)
         {
-            ISaveCommand<TData> cmd = _client.DefaultCore.CreateSaveCommand<TData>();
-            cmd.Data = items;
-            _client.DefaultCore.Operations.Save<TData>(cmd, _serializer);
-        }
-
-        /// <summary>
-        /// Queries the core and returns a list of matching objects
-        /// </summary>
-        /// <param name="query">Solr query (q=)</param>
-        /// <param name="startIndex">Result start index</param>
-        /// <param name="maxRows">Maximum rows to be returned</param>
-        /// <param name="getAll">If <c>true</c> returns all the rows from the results. maxRows will be ignored when this is set to true.</param>
-        /// <returns>List of matching objects.</returns>
-        public IEnumerable<TData> Query(string query, long startIndex = 0, long maxRows = 1000, bool getAll = false)
-        {
-            ILoadCommand cmd = _client.DefaultCore.CreateLoadCommand();
-            cmd.Query = query;
-            cmd.ResponseFormat = FormatType.JSON;
-            cmd.StartIndex = startIndex;
-            cmd.MaxRows = maxRows;
-            cmd.GetAll = getAll;
-
-            return _client.DefaultCore.Operations.Load<TData>(cmd, _serializer, null);
+            return new SingleCore(coreName, client, new SimpleOperations(client.BaseUri, coreName, HttpHelper));
         }
     }
 }
