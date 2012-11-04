@@ -18,10 +18,17 @@
 
 namespace MicroSolr.Core
 {
-    using System;
-
+    /// <summary>
+    /// A response formatter that is applied on Solr response
+    /// </summary>
+    /// <typeparam name="TFormattedResponse">The type of the formatted response.</typeparam>
     public interface IResponseFormatter<out TFormattedResponse>
     {
+        /// <summary>
+        /// Formats the specified data.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <returns></returns>
         TFormattedResponse Format(string data);
     }
 }

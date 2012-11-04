@@ -18,8 +18,7 @@
 
 namespace MicroSolr.Core
 {
-    using System;
-    
+
     /// <summary>
     /// Identifies a basic command
     /// </summary>

@@ -19,16 +19,28 @@
 namespace MicroSolr.Core
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Text;
 
     /// <summary>
-    /// TODO: Update summary.
+    /// Defines a HTTP Helper
     /// </summary>
     public interface IHttpHelper
     {
+        /// <summary>
+        /// Gets the specified URI.
+        /// </summary>
+        /// <param name="uri">The URI.</param>
+        /// <returns></returns>
         string Get(Uri uri);
+
+        /// <summary>
+        /// Posts text content to specified URI.
+        /// </summary>
+        /// <param name="uri">The HTTP based URI.</param>
+        /// <param name="content">Text content.</param>
+        /// <param name="contentType">Type of the content in server compatible format.</param>
+        /// <param name="bytesConverter">The bytes converter for content.</param>
+        /// <returns></returns>
         string Post(Uri uri, string content, string contentType, Encoding bytesConverter);
     }
 }

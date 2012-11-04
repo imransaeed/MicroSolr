@@ -21,22 +21,64 @@ namespace MicroSolr.Core
     using System;
 
     /// <summary>
-    /// TODO: Update summary.
+    /// Defines a load command
     /// </summary>
     public interface ILoadCommand : ICommand, ICloneable
     {
+        /// <summary>
+        /// Gets or sets the response format.
+        /// </summary>
+        /// <value>
+        /// The response format.
+        /// </value>
         FormatType ResponseFormat { get; set; }
 
+        /// <summary>
+        /// Gets or sets the start index.
+        /// </summary>
+        /// <value>
+        /// The start index.
+        /// </value>
         long StartIndex { get; set; }
 
+        /// <summary>
+        /// Gets or sets the max rows.
+        /// </summary>
+        /// <value>
+        /// The max rows.
+        /// </value>
         long MaxRows { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [get all].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [get all]; otherwise, <c>false</c>.
+        /// </value>
         bool GetAll { get; set; }
 
+        /// <summary>
+        /// Gets or sets the query.
+        /// </summary>
+        /// <value>
+        /// The query.
+        /// </value>
         string Query { get; set; }
 
+        /// <summary>
+        /// Gets or sets the filter query.
+        /// </summary>
+        /// <value>
+        /// The filter query.
+        /// </value>
         string FilterQuery { get; set; }
 
+        /// <summary>
+        /// Gets or sets the field filter.
+        /// </summary>
+        /// <value>
+        /// The field filter.
+        /// </value>
         string FieldFilter { get; set; }
     }
 }

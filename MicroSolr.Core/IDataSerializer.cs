@@ -18,18 +18,35 @@
 
 namespace MicroSolr.Core
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
 
     /// <summary>
     /// Serializer for generating Solr compatible streams.
     /// </summary>
     public interface IDataSerializer<TData>
     {
+        /// <summary>
+        /// Serializes the specified data.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <param name="format">The format.</param>
+        /// <returns></returns>
         string Serialize(TData data, FormatType format);
+
+        /// <summary>
+        /// Serializes the specified data.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <param name="format">The format.</param>
+        /// <returns></returns>
         string Serialize(IEnumerable<TData> data, FormatType format);
+
+        /// <summary>
+        /// Deserializes the data from the stream.
+        /// </summary>
+        /// <param name="stream">The stream.</param>
+        /// <param name="format">The format.</param>
+        /// <returns></returns>
         IEnumerable<TData> DeSerialize(string stream, FormatType format);
     }
 }

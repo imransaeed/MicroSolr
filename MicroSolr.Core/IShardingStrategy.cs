@@ -18,16 +18,17 @@
 
 namespace MicroSolr.Core
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-
     /// <summary>
-    /// TODO: Update summary.
+    /// Sharding strategy.
     /// </summary>
+    /// <typeparam name="TData">The type of the data.</typeparam>
     public interface IShardingStrategy<in TData>
     {
+        /// <summary>
+        /// Gets the target core.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <returns></returns>
         ICore GetTargetCore(TData data);
     }
 }

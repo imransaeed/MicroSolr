@@ -18,22 +18,44 @@
 
 namespace MicroSolr.Core
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
 
     /// <summary>
-    /// TODO: Update summary.
+    /// Defines the operations supported by a core
     /// </summary>
     public interface IOperations
     {
+        /// <summary>
+        /// Loads the specified command.
+        /// </summary>
+        /// <typeparam name="TOutput">The type of the output.</typeparam>
+        /// <param name="command">The command.</param>
+        /// <param name="serializer">The serializer.</param>
+        /// <param name="formatter">The formatter.</param>
+        /// <returns></returns>
         IEnumerable<TOutput> Load<TOutput>(ILoadCommand command, IDataSerializer<TOutput> serializer, IResponseFormatter<string> formatter);
 
+        /// <summary>
+        /// Saves the specified command.
+        /// </summary>
+        /// <typeparam name="TData">The type of the data.</typeparam>
+        /// <param name="command">The command.</param>
+        /// <param name="serializer">The serializer.</param>
+        /// <param name="commit">if set to <c>true</c> [commit].</param>
+        /// <param name="optimize">if set to <c>true</c> [optimize].</param>
+        /// <returns></returns>
         IOperations Save<TData>(ISaveCommand<TData> command, IDataSerializer<TData> serializer, bool commit = true, bool optimize = false);
 
+        /// <summary>
+        /// Sends a commit command to the core.
+        /// </summary>
+        /// <returns></returns>
         IOperations Commit();
 
+        /// <summary>
+        /// Starts an optimization instance on the core.
+        /// </summary>
+        /// <returns></returns>
         IOperations Optimize();
     }
 }

@@ -26,10 +26,29 @@ namespace MicroSolr.Core
     /// </summary>
     public interface IClient
     {
+        /// <summary>
+        /// Gets the base URI for Solr server.
+        /// </summary>
+        /// <value>
+        /// The base URI.
+        /// </value>
         Uri BaseUri { get; }
 
+        /// <summary>
+        /// Gets the cores collection.
+        /// </summary>
+        /// <value>
+        /// The cores.
+        /// </value>
         IList<ICore> Cores { get; }
 
+        /// <summary>
+        /// Gets the default core.
+        /// </summary>
+        /// <value>
+        /// The default core.
+        /// <remarks>The default core is the first core in the collection if not defined explicitly.</remarks>
+        /// </value>
         ICore DefaultCore { get; }
     }
 }

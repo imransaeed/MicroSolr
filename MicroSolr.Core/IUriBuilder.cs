@@ -18,13 +18,9 @@
 
 namespace MicroSolr.Core
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
 
     /// <summary>
-    /// TODO: Update summary.
+    /// URI building helper for creating well formed Solr URI
     /// </summary>
     public interface IUriBuilder
     {

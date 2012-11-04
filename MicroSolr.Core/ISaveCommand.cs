@@ -18,16 +18,20 @@
 
 namespace MicroSolr.Core
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
 
     /// <summary>
-    /// TODO: Update summary.
+    /// Defines a save command
     /// </summary>
+    /// <typeparam name="TData">The type of the data.</typeparam>
     public interface ISaveCommand<TData> : ICommand
     {
+        /// <summary>
+        /// Gets or sets the data.
+        /// </summary>
+        /// <value>
+        /// The data.
+        /// </value>
         IEnumerable<TData> Data { get; set; }
     }
 }
