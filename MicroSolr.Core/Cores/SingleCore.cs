@@ -34,7 +34,7 @@ namespace MicroSolr.Core.Cores
         {
             Name = name;
             Client = client;
-            Operations = operations ?? new SimpleOperations(this);
+            Operations = operations ?? new SimpleOperations(this.Client.BaseUri, name);
         }
 
         public string Name

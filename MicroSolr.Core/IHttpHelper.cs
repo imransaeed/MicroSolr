@@ -28,7 +28,6 @@ namespace MicroSolr.Core
     /// </summary>
     public interface IHttpHelper
     {
-        //string HttpCommunicate(Uri uri, string content, string contentType, Encoding bytesConverter, bool post);
         string Get(Uri uri);
         string Post(Uri uri, string content, string contentType, Encoding bytesConverter);
     }

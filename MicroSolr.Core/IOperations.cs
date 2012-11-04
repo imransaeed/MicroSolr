@@ -35,7 +35,5 @@ namespace MicroSolr.Core
         IOperations Commit();
 
         IOperations Optimize();
-
-        ICore Core { get; }
     }
 }
